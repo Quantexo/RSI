@@ -34,10 +34,20 @@ def load_ohlcv_from_public_sheet(sheet_id, gid=0):
 
 # --- Example sector/company mapping (customize as needed) ---
 sector_to_companies = {
-    "Index": ["NEPSE"],
-    "Commercial Banks": ["NABIL", "NICA", "SCB"],
-    "Hydro Power": ["CHCL", "HDHPC", "RHPL"],
-    # ... add your actual mappings
+    "Index": sorted(["NEPSE"]),
+    "Sub-Index": sorted(["BANKING", "DEVBANK", "FINANCE", "HOTELS", "HYDROPOWER", "INVESTMENT", "LIFEINSU", "MANUFACUTRE", "MICROFINANCE", "NONLIFEINSU", "OTHERS", "TRADING"]),
+    "Commercial Banks": sorted(["ADBL","CZBIL","EBL","GBIME","HBL","KBL","LSL","MBL","NABIL","NBL","NICA","NIMB","NMB","PCBL","PRVU","SANIMA","SBI","SBL","SCB"]),
+    "Development Banks": sorted(["CORBL","EDBL","GBBL","GRDBL","JBBL","KSBBL","LBBL","MDB","MLBL","MNBBL","NABBC","SADBL","SAPDBL","SHINE","SINDU"]),
+    "Finance": sorted(["BFC","CFCL","GFCL","GMFIL","GUFL","ICFC","JFL","MFIL","MPFL","NFS","PFL","PROFL","RLFL","SFCL","SIFC"]),
+    "Hotels": sorted(["CGH","CITY","KDL","OHL","SHL","TRH"]),
+    "Hydro Power": sorted(["AHPC", "AHL", "AKJCL", "AKPL", "API", "BARUN", "BEDC", "BHDC", "BHPL", "BGWT", "BHL", "BNHC", "BPCL", "CHCL", "CHL", "CKHL", "DHPL", "DOLTI", "DORDI", "EHPL", "GHL", "GLH", "GVL", "HDHPC", "HHL", "HPPL", "HURJA", "IHL", "JOSHI", "KKHC", "KPCL", "KBSH", "LEC", "MAKAR", "MANDU", "MBJC", "MEHL", "MEL", "MEN", "MHCL", "MHNL", "MKHC", "MKHL", "MKJC", "MMKJL", "MHL", "MCHL", "MSHL", "NGPL", "NHDL", "NHPC", "NYADI", "PPL", "PHCL", "PMHPL", "PPCL", "RADHI", "RAWA", "RHGCL", "RFPL", "RIDI", "RHPL", "RURU", "SAHAS", "SHEL", "SGHC", "SHPC", "SIKLES", "SJCL", "SMH", "SMHL", "SMJC", "SPC", "SPDL", "SPHL", "SPL", "SSHL", "TAMOR", "TPC", "TSHL", "TVCL", "UHEWA", "ULHC", "UMHL", "UMRH", "UNHPL", "UPCL", "UPPER", "USHL", "USHEC", "VLUCL"]),
+    "Investment": sorted(["CHDC","CIT","ENL","HATHY","HIDCL","NIFRA","NRN"]),
+    "Life Insurance": sorted(["ALICL","CLI","CREST","GMLI","HLI","ILI","LICN","NLIC","NLICL","PMLI","RNLI","SJLIC","SNLI","SRLI"]),
+    "Manufacturing and Processing": sorted(["BNL","BNT","GCIL","HDL","NLO","OMPL","SARBTM","SHIVM","SONA","UNL"]),
+    "Microfinance": sorted(["ACLBSL","ALBSL","ANLB","AVYAN","CBBL","CYCL","DDBL","DLBS","FMDBL","FOWAD","GBLBS","GILB","GLBSL","GMFBS","HLBSL","ILBS","JBLB","JSLBB","KMCDB","LLBS","MATRI","MERO","MLBBL","MLBS","MLBSL","MSLB","NADEP","NESDO","NICLBSL","NMBMF","NMFBS","NMLBBL","NUBL","RSDC","SAMAJ","SHLB","SKBBL","SLBBL","SLBSL","SMATA","SMB","SMFBS","SMPDA","SWBBL","SWMF","ULBSL","UNLB","USLB","VLBS","WNLB"]),
+    "Non Life Insurance": sorted(["HEI","IGI","NICL","NIL","NLG","NMIC","PRIN","RBCL","SALICO","SGIC"]),
+    "Others": sorted(["HRL","MKCL","NRIC","NRM","NTC","NWCL"]),
+    "Trading": sorted(["BBC","STC"])
 }
 
 # --- Controls Row ---
