@@ -2,64 +2,106 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+# --- Custom CSS for background and controls ---
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #335353;
+    }
+    .stTextInput>div>div>input, .stSelectbox>div>div>div>input {
+        background-color: #222c2c;
+        color: #fff;
+    }
+    .stButton>button {
+        background-color: #222c2c;
+        color: #fff;
+        border: 1px solid #ff4444;
+        border-radius: 6px;
+        font-weight: bold;
+    }
+    .stButton>button:hover {
+        background-color: #ff4444;
+        color: #fff;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 def load_ohlcv_from_public_sheet(sheet_id, gid=0):
-    """
-    Loads OHLCV data from a public Google Sheet published as CSV.
-    Args:
-        sheet_id (str): The Google Sheet ID (from the URL).
-        gid (int): The sheet/tab GID (default 0 for the first sheet).
-    Returns:
-        pd.DataFrame: DataFrame with columns ['date', 'symbol', 'open', 'high', 'low', 'close', 'volume']
-    """
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
     df = pd.read_csv(url)
     df.columns = [col.lower() for col in df.columns]
     return df
 
-# --- Streamlit App ---
+# --- Example sector/company mapping (customize as needed) ---
+sector_to_companies = {
+    "Index": ["NEPSE"],
+    "Commercial Banks": ["NABIL", "NICA", "SCB"],
+    "Hydro Power": ["CHCL", "HDHPC", "RHPL"],
+    # ... add your actual mappings
+}
 
-st.set_page_config(page_title="Close Price Chart", layout="wide")
+# --- Controls Row ---
+col1, col2, col3, col4, col5 = st.columns([1.2, 1.2, 1.2, 2, 0.7])
 
-# 1. Page title at the very top
-st.title("Stock Close Price Viewer")
+with col1:
+    selected_sector = st.selectbox("Sector", list(sector_to_companies.keys()), label_visibility="collapsed")
+with col2:
+    companies = sector_to_companies[selected_sector]
+    selected_company = st.selectbox("Company", companies, label_visibility="collapsed")
+with col3:
+    symbol_input = st.text_input("Enter Symbol", value="", label_visibility="collapsed", placeholder="Enter Symbol")
+with col4:
+    search_clicked = st.button("Search")
+with col5:
+    st.write("")  # Spacer
 
-# 2. Load data
-sheet_id = "1Q_En7VGGfifDmn5xuiF-t_02doPpwl4PLzxb4TBCW0Q"  # Replace with your sheet ID
+# --- Data Loading ---
+sheet_id = "1Q_En7VGGfifDmn5xuiF-t_02doPpwl4PLzxb4TBCW0Q"
 df = load_ohlcv_from_public_sheet(sheet_id)
-
-required_cols = {'date', 'symbol', 'close'}
-if not required_cols.issubset(df.columns):
-    st.error("Missing required columns in the data.")
-    st.stop()
-
 df['date'] = pd.to_datetime(df['date'], errors='coerce')
 
-# 3. Search bar directly below the title
-symbols = sorted(df['symbol'].dropna().unique())
-selected_symbol = st.selectbox("Select Company Symbol", symbols, key="symbol_select")
-
-filtered_df = df[df['symbol'] == selected_symbol]
-
-if filtered_df.empty:
-    st.warning("No data for selected symbol.")
+# --- Symbol selection logic ---
+if search_clicked and symbol_input.strip():
+    symbol = symbol_input.strip().upper()
+elif selected_company:
+    symbol = selected_company
 else:
-    # 4. Chart uses full width and is larger
+    symbol = None
+
+# --- Info Row ---
+if not df.empty:
+    st.markdown(
+        f"<span style='color:#ccc;font-size:14px;'>🕒 Data fetched: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}</span>",
+        unsafe_allow_html=True
+    )
+    if symbol:
+        last_data_date = df[df['symbol'] == symbol]['date'].max()
+        st.markdown(
+            f"<span style='color:#ccc;font-size:14px;'>🗓️ Latest data point: {last_data_date.strftime('%Y-%m-%d') if pd.notnull(last_data_date) else '-'}" ,
+            unsafe_allow_html=True
+        )
+
+# --- Chart ---
+if symbol and not df[df['symbol'] == symbol].empty:
+    filtered_df = df[df['symbol'] == symbol]
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=filtered_df['date'],
         y=filtered_df['close'],
         mode='lines',
         name='Close Price',
-        line=dict(color='royalblue', width=2)
+        line=dict(color='#bfefff', width=2)
     ))
     fig.update_layout(
-        title=f"Close Price for {selected_symbol}",
-        xaxis_title="Date",
-        yaxis_title="Close Price",
-        plot_bgcolor="white",
-        height=700,  # Make the chart bigger
-        margin=dict(l=40, r=40, t=60, b=40)
+        height=700,
+        plot_bgcolor='#335353',
+        paper_bgcolor='#335353',
+        font_color='white',
+        xaxis=dict(title="Date", showgrid=False, tickangle=-30),
+        yaxis=dict(title="Price", showgrid=False),
+        margin=dict(l=40, r=40, t=40, b=40),
+        title=None,
     )
-
-    # 5. Show chart with full width (no columns)
     st.plotly_chart(fig, use_container_width=True)
+else:
+    st.info("Please select a company or enter a symbol and click Search.")
