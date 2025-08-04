@@ -46,7 +46,7 @@ sector_to_companies = {
     "Manufacturing and Processing": sorted(["BNL","BNT","GCIL","HDL","NLO","OMPL","SARBTM","SHIVM","SONA","UNL"]),
     "Microfinance": sorted(["ACLBSL","ALBSL","ANLB","AVYAN","CBBL","CYCL","DDBL","DLBS","FMDBL","FOWAD","GBLBS","GILB","GLBSL","GMFBS","HLBSL","ILBS","JBLB","JSLBB","KMCDB","LLBS","MATRI","MERO","MLBBL","MLBS","MLBSL","MSLB","NADEP","NESDO","NICLBSL","NMBMF","NMFBS","NMLBBL","NUBL","RSDC","SAMAJ","SHLB","SKBBL","SLBBL","SLBSL","SMATA","SMB","SMFBS","SMPDA","SWBBL","SWMF","ULBSL","UNLB","USLB","VLBS","WNLB"]),
     "Non Life Insurance": sorted(["HEI","IGI","NICL","NIL","NLG","NMIC","PRIN","RBCL","SALICO","SGIC"]),
-    "Others": sorted(["HRL","MKCL","NRIC","NRM","NTC","NWCL"]),
+    "Others": sorted(["HRL","MKCL","NRIC","NRM","NTC","NWCL","PURE"]),
     "Trading": sorted(["BBC","STC"])
 }
 
